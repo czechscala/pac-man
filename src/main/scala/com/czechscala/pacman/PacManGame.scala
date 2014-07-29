@@ -15,7 +15,7 @@ object PacManGame extends App {
 
   class Engine extends Actor {
     private val renderer = new Swing(6, 5, self)
-    private var state = Board(initialGrid, Map(), Map(PacMan -> (Position(1, 1), Some(Right))))
+    private var state = Board(initialGrid, Map(Position(2, 2) -> new Gem), Map(PacMan -> (Position(1, 1), Some(Right)), new Ghost -> (Position(1,3), Some(Right))))
     private var delay = 1000
 
     override def preStart = {
