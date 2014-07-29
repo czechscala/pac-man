@@ -148,7 +148,7 @@ class Swing(width: Int, height: Int, keyListener: ActorRef) extends Renderer {
 
   private object Keyboard extends KeyListener {
     override def keyPressed(e: KeyEvent): Unit = {
-      val keyPress = e.getExtendedKeyCode match {
+      val keyPress = e.getKeyCode match {
         case KeyEvent.VK_LEFT => Some(Left)
         case KeyEvent.VK_RIGHT => Some(Right)
         case KeyEvent.VK_DOWN => Some(Down)
