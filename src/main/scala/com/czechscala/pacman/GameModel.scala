@@ -10,12 +10,24 @@ case class Board(
   def width = grid(0).length
   def height = grid.length
 
+  def cellAt(pos: Position): Cell = grid(pos.y)(pos.x)
+
   def moveAllCharacters: Board = {
+    def getNextPosition(pos: Position, d: Option[Direction]) = d match {
+      case None => pos
+      case Some(Right) => pos.copy(x = pos.x + 1)
+      case Some(Left) => pos.copy(x = pos.x - 1)
+      case Some(Up) => pos.copy(y = pos.y - 1)
+      case Some(Down) => pos.copy(y = pos.y + 1)
+    }
     val newChars = Map.newBuilder[Character, (Position, Option[Direction])]
     for((ch, (pos, dir)) <- characters) {
-      newChars += (ch -> (pos.copy(pos.x + 1), dir))
+      val nextPos = getNextPosition(pos, dir)
+      val nextDirection = if(cellAt(getNextPosition(nextPos, dir)) == Empty) dir else None
+      newChars += (ch -> (nextPos, nextDirection))
     }
     this.copy(characters = newChars.result())
+
   }
 }
 

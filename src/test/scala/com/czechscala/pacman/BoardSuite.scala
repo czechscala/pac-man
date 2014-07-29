@@ -34,7 +34,7 @@ class BoardSuite extends FunSuite with Matchers {
   }
 
   test("moveAllCharacters - PacMan moves up to wall and stops") {
-    pacManMoveTest(Position(1, 2) -> Some(Right), Position(1, 1) -> None)
+    pacManMoveTest(Position(1, 2) -> Some(Up), Position(1, 1) -> None)
   }
 
   test("moveAllCharacters - PacMan moves down to wall and stops") {
