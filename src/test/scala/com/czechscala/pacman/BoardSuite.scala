@@ -15,6 +15,10 @@ class BoardSuite extends FunSuite with Matchers {
     case _ => Empty
   } toArray)
 
+  test("initialization - all rows the same length") {
+    an [IllegalArgumentException] should be thrownBy { Board(Array(Array(Wall, Wall), Array(Wall))) }
+  }
+
   test("moveAllCharacters") {
     val grid = parse(grid1)
     val board = Board(grid,

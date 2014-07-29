@@ -2,9 +2,11 @@ package com.czechscala.pacman
 
 case class Board(
   grid: Array[Array[Cell]],
-  objects: Map[Position, Object],
-  characters: Map[Character, (Position, Option[Direction])]
+  objects: Map[Position, Object] = Map(),
+  characters: Map[Character, (Position, Option[Direction])] = Map()
 ) {
+  require(grid.map(_.length).toSet.size == 1)
+
   def width = grid(0).length
   def height = grid.length
 
@@ -17,8 +19,8 @@ trait Object
 class Gem extends Object
 
 trait Cell
-case object Wall extends Cell
-case object Empty extends Cell
+object Wall extends Cell
+object Empty extends Cell
 
 trait Character
 case object PacMan extends Character
