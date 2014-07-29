@@ -34,11 +34,11 @@ class BoardSuite extends FunSuite with Matchers {
   }
 
   test("moveAllCharacters - PacMan moves up") {
-    pacManMoveTest(Position(4, 3) -> Some(Left), Position(4, 2) -> Some(Left))
+    pacManMoveTest(Position(4, 3) -> Some(Up), Position(4, 2) -> Some(Up))
   }
 
   test("moveAllCharacters - PacMan moves down") {
-    pacManMoveTest(Position(1, 1) -> Some(Left), Position(1, 2) -> Some(Left))
+    pacManMoveTest(Position(1, 1) -> Some(Down), Position(1, 2) -> Some(Down))
   }
 
   test("moveAllCharacters - PacMan moves left to wall and stops") {
@@ -50,7 +50,7 @@ class BoardSuite extends FunSuite with Matchers {
   }
 
   test("moveAllCharacters - PacMan moves up to wall and stops") {
-    pacManMoveTest(Position(1, 2) -> Some(Right), Position(1, 1) -> None)
+    pacManMoveTest(Position(1, 2) -> Some(Up), Position(1, 1) -> None)
   }
 
   test("moveAllCharacters - PacMan moves down to wall and stops") {
