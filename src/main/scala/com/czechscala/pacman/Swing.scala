@@ -71,8 +71,8 @@ class Swing(width: Int, height: Int, keyListener: ActorRef) extends Renderer {
 
           for ((character, (position, direction)) <- board.characters) {
             character match {
-              case PacMan => drawPacMan(position.x, position.y, graphics)
-              case ghost: Ghost => drawGhost(position.x, position.y, Color.DARK_GRAY, graphics)
+              case PacMan => drawPacMan(position.x, position.y, direction, graphics)
+              case ghost: Ghost => drawGhost(position.x, position.y, Color.DARK_GRAY, direction, graphics)
             }
           }
 
@@ -91,19 +91,40 @@ class Swing(width: Int, height: Int, keyListener: ActorRef) extends Renderer {
       g.fillRect(coord2px(x), coord2px(y), RectSizePx, RectSizePx)
     }
 
-    private def drawPacMan(x: Int, y: Int, g: Graphics) = {
+    private def drawPacMan(x: Int, y: Int, direction: Option[Direction], g: Graphics) = {
       g.setColor(PacManColor)
-      g.fillArc(coord2px(x) + PacManBorderPx, coord2px(y) + PacManBorderPx, PacManSizePx, PacManSizePx, 30, 290)
+
+      val angle = direction match {
+        case None => 30
+        case Some(dir) if dir == Up => 120
+        case Some(dir) if dir == Down => 300
+        case Some(dir) if dir == Right => 30
+        case Some(dir) if dir == Left => 210
+      }
+
+      g.fillArc(coord2px(x) + PacManBorderPx, coord2px(y) + PacManBorderPx, PacManSizePx, PacManSizePx, angle, 300)
     }
 
-    private def drawGhost(x: Int, y: Int, color: Color, g: Graphics) = {
+    private def drawGhost(x: Int, y: Int, color: Color, direction: Option[Direction], g: Graphics) = {
       g.setColor(color)
       g.fillRect(coord2px(x) + GhostBorderPx, coord2px(y + 1) - (RectSizePx / 2), GhostSizePx, RectSizePx / 2)
       g.fillArc(coord2px(x) + GhostBorderPx, coord2px(y) + GhostBorderPx, GhostSizePx, GhostSizePx, 0, 180)
 
+      val RectSizeThird = RectSizePx / 3
+      val EyeSizeHalf = GhostEyeSizePx / 2
+      val ((leftX, leftY), (rightX, rightY)) = direction match {
+        case None => ((RectSizeThird, RectSizeThird), (2 * RectSizeThird, RectSizeThird))
+        case Some(dir) if dir == Up => ((RectSizeThird - EyeSizeHalf, RectSizeThird - GhostEyeSizePx + 3),
+            (2 * RectSizeThird - EyeSizeHalf, RectSizeThird - GhostEyeSizePx + 3))
+        case Some(dir) if dir == Down => ((RectSizeThird - EyeSizeHalf, RectSizeThird + GhostEyeSizePx), (2 * RectSizeThird - EyeSizeHalf,
+            RectSizeThird + GhostEyeSizePx))
+        case Some(dir) if dir == Right => ((RectSizeThird, RectSizeThird), (2 * RectSizeThird, RectSizeThird))
+        case Some(dir) if dir == Left => ((RectSizeThird - GhostEyeSizePx, RectSizeThird), (2 * RectSizeThird - GhostEyeSizePx, RectSizeThird))
+      }
+
       g.setColor(Color.RED)
-      g.fillOval(coord2px(x) + (RectSizePx / 3), coord2px(y) + (RectSizePx / 3), GhostEyeSizePx, GhostEyeSizePx)
-      g.fillOval(coord2px(x) + 2 * (RectSizePx / 3), coord2px(y) + (RectSizePx / 3), GhostEyeSizePx, GhostEyeSizePx)
+      g.fillOval(coord2px(x) + leftX, coord2px(y) + leftY, GhostEyeSizePx, GhostEyeSizePx)
+      g.fillOval(coord2px(x) + rightX, coord2px(y) + rightY, GhostEyeSizePx, GhostEyeSizePx)
     }
 
     private def drawGem(x: Int, y: Int, g: Graphics) = {
@@ -164,7 +185,7 @@ object Swing extends App {
   swing.render(
     Board(
       Array(Array(Wall, Wall, Empty), Array(Wall, Empty, Wall), Array(Empty, Wall, Wall)),
-      Map(Position(1, 1) -> new Gem), Map(PacMan ->(Position(2, 0), None), new Ghost ->(Position(0, 2), None))
+      Map(Position(1, 1) -> new Gem), Map(PacMan ->(Position(2, 0), Some(Left)), new Ghost ->(Position(0, 2), Some(Up)))
     )
   )
 }
