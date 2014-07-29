@@ -17,6 +17,11 @@ case class Board(
     }
     this.copy(characters = newChars.result())
   }
+
+  def setPacManDirection(direction: Direction): Board = copy(characters = characters map {
+    case (PacMan, (position, _)) => (PacMan, (position, Some(direction)))
+    case x => x
+  })
 }
 
 case class Position(x: Int, y: Int)

@@ -75,4 +75,26 @@ class BoardSuite extends FunSuite with Matchers {
       ghost3 -> (Position(1, 2), Some(Up))
     )))
   }
+
+  test("setPacManDirection") {
+    val ghost = new Ghost
+    val gem = new Gem
+    val grid = parse("  \n" +
+                     "  ")
+    val board = Board(grid,
+      objects = Map(Position(1, 1) -> gem),
+      characters = Map(
+        PacMan -> (Position(0, 0), Some(Right)),
+        ghost -> (Position(0, 1), Some(Up))
+      )
+    )
+
+    board.setPacManDirection(Down) should be (Board(grid,
+      objects = Map(Position(1, 1) -> gem),
+      characters = Map(
+        PacMan -> (Position(0, 0), Some(Down)),
+        ghost -> (Position(0, 1), Some(Up))
+      )
+    ))
+  }
 }
