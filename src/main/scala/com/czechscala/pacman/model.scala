@@ -1,12 +1,14 @@
 package com.czechscala.pacman
 
 case class Board(
-                  grid: Array[Array[Cell]],
-                  objects: Map[Position, Object],
-                  characters: Map[Character, (Position, Direction)]
-                  ) {
+  grid: Array[Array[Cell]],
+  objects: Map[Position, Object],
+  characters: Map[Character, (Position, Option[Direction])]
+) {
   def width = grid(0).length
   def height = grid.length
+
+  def moveAllCharacters: Board = ???
 }
 
 case class Position(x: Int, y: Int)
