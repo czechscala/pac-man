@@ -10,7 +10,13 @@ case class Board(
   def width = grid(0).length
   def height = grid.length
 
-  def moveAllCharacters: Board = ???
+  def moveAllCharacters: Board = {
+    val newChars = Map.newBuilder[Character, (Position, Option[Direction])]
+    for((ch, (pos, dir)) <- characters) {
+      newChars += (ch -> (pos.copy(pos.x + 1), dir))
+    }
+    this.copy(characters = newChars.result())
+  }
 }
 
 case class Position(x: Int, y: Int)
