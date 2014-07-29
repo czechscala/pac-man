@@ -18,8 +18,8 @@ class BoardSuite extends FunSuite with Matchers {
     val grid = parse("######\n" +
                      "#    #\n" +
                      "#    #\n" +
+                     "#    #\n" +
                      "######\n")
-    grid map (_.toList.mkString) foreach println
     val board = Board(grid, characters = Map(PacMan -> startPosition))
 
     board.moveAllCharacters should be (Board(grid, characters = Map(PacMan -> endPosition)))
@@ -33,11 +33,46 @@ class BoardSuite extends FunSuite with Matchers {
     pacManMoveTest(Position(4, 1) -> Some(Left), Position(3, 1) -> Some(Left))
   }
 
+  test("moveAllCharacters - PacMan moves up") {
+    pacManMoveTest(Position(4, 3) -> Some(Left), Position(4, 2) -> Some(Left))
+  }
+
+  test("moveAllCharacters - PacMan moves down") {
+    pacManMoveTest(Position(1, 1) -> Some(Left), Position(1, 2) -> Some(Left))
+  }
+
+  test("moveAllCharacters - PacMan moves left to wall and stops") {
+    pacManMoveTest(Position(2, 1) -> Some(Left), Position(1, 1) -> None)
+  }
+
+  test("moveAllCharacters - PacMan moves right to wall and stops") {
+    pacManMoveTest(Position(3, 1) -> Some(Right), Position(4, 1) -> None)
+  }
+
   test("moveAllCharacters - PacMan moves up to wall and stops") {
     pacManMoveTest(Position(1, 2) -> Some(Right), Position(1, 1) -> None)
   }
 
   test("moveAllCharacters - PacMan moves down to wall and stops") {
-    pacManMoveTest(Position(1, 1) -> Some(Down), Position(1, 2) -> None)
+    pacManMoveTest(Position(1, 2) -> Some(Down), Position(1, 3) -> None)
+  }
+
+  test("moveAllCharacters - multiple ghosts") {
+    val grid = parse("########\n" +
+                     "#      #\n" +
+                     "#      #\n" +
+                     "########")
+    val (ghost1, ghost2, ghost3) = (new Ghost, new Ghost, new Ghost)
+    val board = Board(grid, characters = Map(
+      ghost1 -> (Position(1, 1), Some(Right)),
+      ghost2 -> (Position(2, 1), Some(Right)),
+      ghost3 -> (Position(1, 3), Some(Up))
+    ))
+
+    board.moveAllCharacters should be (Board(grid, characters = Map(
+      ghost1 -> (Position(2, 1), Some(Right)),
+      ghost2 -> (Position(3, 1), Some(Right)),
+      ghost3 -> (Position(1, 2), Some(Up))
+    )))
   }
 }
