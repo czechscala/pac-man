@@ -19,8 +19,8 @@ trait Object
 class Gem extends Object
 
 trait Cell
-object Wall extends Cell
-object Empty extends Cell
+object Wall extends Cell { override def toString = "#" }
+object Empty extends Cell { override def toString = "_" }
 
 trait Character
 case object PacMan extends Character
