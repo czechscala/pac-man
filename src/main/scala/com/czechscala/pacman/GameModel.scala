@@ -28,10 +28,11 @@ case class Board(
       newChars += (ch -> (nextPos, nextDirection))
     }
     this.copy(characters = newChars.result())
-
   }
 
-  def checkDirectionValidity(pos: Position, dir: Option[Direction]): Option[Direction] = if(cellAt(getNextPosition(pos, dir)) == Empty) dir else None
+  def isOnBoard(pos: Position): Boolean = if(pos.x < 0 || pos.x >= width || pos.y < 0 || pos.y >= height) false else true
+
+  def checkDirectionValidity(pos: Position, dir: Option[Direction]): Option[Direction] = if(isOnBoard(getNextPosition(pos, dir)) && cellAt(getNextPosition(pos, dir)) == Empty) dir else None
 
   def setPacManDirection(direction: Direction): Board = copy(characters = characters map {
     case (PacMan, (position, _)) => (PacMan, (position, checkDirectionValidity(position, Some(direction))))
