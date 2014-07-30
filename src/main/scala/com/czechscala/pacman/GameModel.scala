@@ -12,26 +12,29 @@ case class Board(
 
   def cellAt(pos: Position): Cell = grid(pos.y)(pos.x)
 
+  def getNextPosition(pos: Position, d: Option[Direction]) = d match {
+    case None => pos
+    case Some(Right) => pos.copy(x = pos.x + 1)
+    case Some(Left) => pos.copy(x = pos.x - 1)
+    case Some(Up) => pos.copy(y = pos.y - 1)
+    case Some(Down) => pos.copy(y = pos.y + 1)
+  }
+
   def moveAllCharacters: Board = {
-    def getNextPosition(pos: Position, d: Option[Direction]) = d match {
-      case None => pos
-      case Some(Right) => pos.copy(x = pos.x + 1)
-      case Some(Left) => pos.copy(x = pos.x - 1)
-      case Some(Up) => pos.copy(y = pos.y - 1)
-      case Some(Down) => pos.copy(y = pos.y + 1)
-    }
     val newChars = Map.newBuilder[Character, (Position, Option[Direction])]
     for((ch, (pos, dir)) <- characters) {
       val nextPos = getNextPosition(pos, dir)
-      val nextDirection = if(cellAt(getNextPosition(nextPos, dir)) == Empty) dir else None
+      val nextDirection = checkDirectionValidity(nextPos, dir)
       newChars += (ch -> (nextPos, nextDirection))
     }
     this.copy(characters = newChars.result())
 
   }
 
+  def checkDirectionValidity(pos: Position, dir: Option[Direction]): Option[Direction] = if(cellAt(getNextPosition(pos, dir)) == Empty) dir else None
+
   def setPacManDirection(direction: Direction): Board = copy(characters = characters map {
-    case (PacMan, (position, _)) => (PacMan, (position, Some(direction)))
+    case (PacMan, (position, _)) => (PacMan, (position, checkDirectionValidity(position, Some(direction))))
     case x => x
   })
 }
