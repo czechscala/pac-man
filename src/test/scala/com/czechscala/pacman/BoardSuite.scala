@@ -161,4 +161,68 @@ class BoardSuite extends FunSuite with Matchers {
       )
     ))
   }
+
+  test("setPacManDirection - forbidden direction Right out of map") {
+    val grid = parse("  \n" +
+                     "  ")
+    val board = Board(grid,
+      characters = Map(
+        PacMan -> (Position(1, 0), Some(Down))
+      )
+    )
+
+    board.setPacManDirection(Right) should be (Board(grid,
+      characters = Map(
+        PacMan -> (Position(1, 0), None)
+      )
+    ))
+  }
+
+  test("setPacManDirection - forbidden direction Left out of map") {
+    val grid = parse("  \n" +
+                     "  ")
+    val board = Board(grid,
+      characters = Map(
+        PacMan -> (Position(0, 0), Some(Down))
+      )
+    )
+
+    board.setPacManDirection(Left) should be (Board(grid,
+      characters = Map(
+        PacMan -> (Position(0, 0), None)
+      )
+    ))
+  }
+
+  test("setPacManDirection - forbidden direction Up out of map") {
+    val grid = parse("  \n" +
+                     "  ")
+    val board = Board(grid,
+      characters = Map(
+        PacMan -> (Position(0, 0), Some(Down))
+      )
+    )
+
+    board.setPacManDirection(Up) should be (Board(grid,
+      characters = Map(
+        PacMan -> (Position(0, 0), None)
+      )
+    ))
+  }
+
+  test("setPacManDirection - forbidden direction Down out of map") {
+    val grid = parse("  \n" +
+                     "  ")
+    val board = Board(grid,
+      characters = Map(
+        PacMan -> (Position(1, 1), Some(Left))
+      )
+    )
+
+    board.setPacManDirection(Down) should be (Board(grid,
+      characters = Map(
+        PacMan -> (Position(1, 1), None)
+      )
+    ))
+  }
 }
